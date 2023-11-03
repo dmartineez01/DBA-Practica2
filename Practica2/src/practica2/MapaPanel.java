@@ -25,7 +25,13 @@ public class MapaPanel extends javax.swing.JPanel {
         this.agenteY = y;
         repaint(); // Repintar el mapa cada vez que el agente cambia de posición
     }
+    
+    public void setMap(Mapa nuevoMapa) {
+        this.mapa = nuevoMapa;
+        repaint(); // Repintar el panel para mostrar el nuevo mapa
+    }
 
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

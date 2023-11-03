@@ -32,22 +32,74 @@ public class MapaVisual extends JFrame {
     private int iteraciones = 0;
 
     private MapaPanel mapaPanel;
+    private JComboBox<String> comboBoxMapas;
+    private JComboBox<Point> comboBoxPosicionesAgente;
+    private JButton botonInicio;
     
     public MapaVisual(Mapa mapa, Agente agente) {
         this.mapa = mapa;
         this.agente = agente;
-        this.agenteX = 0;
-        this.agenteY = 0;
-        this.setTitle("Visualización del Mapa");
-        this.setPreferredSize(new Dimension(800, 600)); // Establece el tamaño preferido para el JFrame
+        this.agenteX = agente.getPosicionActual().x;
+        this.agenteY = agente.getPosicionActual().y;
 
+        // Configuración básica de la ventana
+        this.setTitle("Visualización del Mapa");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
-    JPanel btnPanel = new JPanel();
+        this.setLayout(new BorderLayout()); // Usar BorderLayout para la disposición principal
+
+        // Crear y configurar el panel del mapa
+        mapaPanel = new MapaPanel(mapa, agenteX, agenteY);
+        mapaPanel.setPreferredSize(new Dimension(600, 400));
+        mapaPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Añadir márgenes alrededor del mapa
+
+        // Panel superior para selección de mapas y posiciones
+        JPanel comboBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEADING, 10, 10)); // Usar FlowLayout con espacios
+        comboBoxPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Añadir márgenes alrededor de los componentes
+
+        String[] mapas = {"mapa1", "mapa2", "mapa3"};
+        comboBoxMapas = new JComboBox<>(mapas);
+        comboBoxMapas.addActionListener(e -> {
+            String selectedMap = (String) comboBoxMapas.getSelectedItem();
+            mapa.loadMap("practica2/Mapas/" + selectedMap + ".txt");
+            agente.changeMap("practica2/Mapas/" + selectedMap + ".txt");
+            mapaPanel.setMap(mapa); // Suponiendo que tienes un método setMap para actualizar el mapa.
+            mapaPanel.repaint();
+            mapaPanel.revalidate(); // Si es necesario, para revalidar el layout
+            updateAgentPositions(); // Actualiza las posiciones del agente si es necesario
+        });
+
+
+        comboBoxPosicionesAgente = new JComboBox<>();
+        comboBoxPosicionesAgente.addActionListener(e -> {
+            Point selectedPosition = (Point) comboBoxPosicionesAgente.getSelectedItem();
+            agente.setPosicionActual(selectedPosition);
+            setAgentePosicion(selectedPosition.x, selectedPosition.y);
+            mapaPanel.repaint();
+        });
+        
+        botonInicio = new JButton("Iniciar");
+        botonInicio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Inicia el comportamiento del agente o lo que sea necesario
+                agente.startMovement();
+            }
+        });
+
+        comboBoxPanel.add(new JLabel("Seleccionar Mapa:"));
+        comboBoxPanel.add(comboBoxMapas);
+        comboBoxPanel.add(new JLabel("Seleccionar Posición Inicial:"));
+        comboBoxPanel.add(comboBoxPosicionesAgente);
+        comboBoxPanel.add(botonInicio);
+        
+        // Añadir el panel del mapa y los botones a la ventana
+        add(mapaPanel, BorderLayout.CENTER);
+        add(comboBoxPanel, BorderLayout.NORTH);
+        
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        btnPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
         btnIterar = new JButton("Iterar");
-        btnAuto = new JButton("Auto");
-
         btnIterar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -56,6 +108,7 @@ public class MapaVisual extends JFrame {
             }
         });
 
+        btnAuto = new JButton("Auto");
         btnAuto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -79,44 +132,71 @@ public class MapaVisual extends JFrame {
 
         btnPanel.add(btnIterar);
         btnPanel.add(btnAuto);
-        this.add(btnPanel, BorderLayout.SOUTH);
         
-        // Título dentro de la ventana
-    lblTitulo = new JLabel("Practica 2 - DBA", SwingConstants.CENTER);
-    lblTitulo.setFont(new Font("Serif", Font.BOLD, 20));
-    this.add(lblTitulo, BorderLayout.NORTH);
+        // Panel informativo en el lado este
+        JPanel panelInfo = new JPanel(new GridLayout(6, 1, 10, 10)); // GridLayout con espacios horizontales y verticales
+        panelInfo.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder("Información del Agente"),
+            BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+
+        lblPosicionActual = new JLabel("Posición Actual: (" + agenteX + "," + agenteY + ")");
+        lblPosicionObjetivo = new JLabel("Posición Objetivo: (" + agente.getObjetivo().x + "," + agente.getObjetivo().y + ")");
+        lblNumeroIteracion = new JLabel("Iteración: 0");
     
-        // Panel Informativo
-    JPanel panelInfo = new JPanel();
-    panelInfo.setLayout(new GridLayout(6, 1));
-
-    // Estilo para el panel informativo
-    panelInfo.setBorder(BorderFactory.createTitledBorder("Información del Agente"));
-    panelInfo.setBackground(Color.LIGHT_GRAY);
-
-    lblPosicionActual = new JLabel("Posición Actual: (0,0)");
-    lblPosicionObjetivo = new JLabel("Posición Objetivo: (" + agente.objetivo.x + "," + agente.objetivo.y + ")");
-    lblNumeroIteracion = new JLabel("Iteración: " + iteraciones);
-
+    
+        // Añadir etiquetas informativas al panelInfo
     panelInfo.add(lblPosicionActual);
     panelInfo.add(lblPosicionObjetivo);
     panelInfo.add(lblNumeroIteracion);
 
+    // Añadir paneles al JFrame
+    this.add(comboBoxPanel, BorderLayout.NORTH);
+    this.add(mapaPanel, BorderLayout.CENTER);
+    this.add(btnPanel, BorderLayout.SOUTH);
     this.add(panelInfo, BorderLayout.EAST);
     
-    
-        // Después de definir el panel de información, pero antes de pack();
-        mapaPanel = new MapaPanel(mapa, agenteX, agenteY); // Inicializamos el panel del mapa con las posiciones iniciales
-        this.add(mapaPanel, BorderLayout.CENTER);
-
-        this.pack();
+    // Inicializa la lista de posiciones disponibles para el agente
+        updateAgentPositions();
+        
+    // Ajustes finales de la ventana
+    this.pack(); // Ajustar el tamaño de la ventana para acomodar los componentes
+    this.setLocationRelativeTo(null); // Centrar en la pantalla
+    this.setVisible(true); // Mostrar la ventana
 
     }
     
     public void doIteration() {
-    if(doIteration != null) {
-        doIteration.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "doIteration"));
+        if(doIteration != null) {
+            doIteration.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "doIteration"));
+            }
+    }
+
+    // Método para actualizar la lista de posiciones disponibles para el agente
+    private void updateAgentPositions() {
+        comboBoxPosicionesAgente.removeAllItems();
+        for (int i = 0; i < mapa.getFilas(); i++) {
+            for (int j = 0; j < mapa.getColumnas(); j++) {
+                if (mapa.isFree(i, j)) {
+                    comboBoxPosicionesAgente.addItem(new Point(i, j));
+                }
+            }
         }
+    }
+    
+    // En la clase MapaVisual
+    public void setMap(Mapa newMap) {
+        this.mapa = newMap; // Actualiza el mapa actual de esta visualización.
+
+        // Asegúrate de actualizar también el mapa en el MapaPanel.
+        mapaPanel.setMap(newMap);
+
+        // Después de cambiar el mapa, probablemente necesites actualizar las posiciones del agente.
+        updateAgentPositions();
+
+        // Y actualiza la interfaz gráfica para reflejar los cambios del nuevo mapa.
+        mapaPanel.repaint();
+        mapaPanel.revalidate(); // Si es necesario, para revalidar el layout.
     }
 
     

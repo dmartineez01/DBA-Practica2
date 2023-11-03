@@ -15,8 +15,15 @@ public class Mapa {
     private int[][] data;
     private int filas;
     private int columnas;
-
+    private Point posicionObjetivo;
+    
+    // Constructor modificado para llamar al método loadMap.
     public Mapa(String fichero) {
+        loadMap(fichero);
+    }
+
+    // Método para cargar el mapa desde un fichero.
+    public void loadMap(String fichero) {
         try {
             
             InputStream is = this.getClass().getClassLoader().getResourceAsStream(fichero);
@@ -61,8 +68,19 @@ public class Mapa {
         return columnas;
     }
     
+    // Modificamos el método setObjetivo
     public void setObjetivo(int x, int y) {
-        data[x][y] = 2;
+        if (!isObstacle(x, y)) {
+            data[x][y] = 2; // Suponiendo que el número 2 indica el objetivo en tu mapa
+            posicionObjetivo = new Point(x, y);
+        } else {
+            System.err.println("No se puede establecer el objetivo en una posición ocupada por un obstáculo.");
+        }
+    }
+
+    // Implementamos getObjetivo
+    public Point getObjetivo() {
+        return posicionObjetivo;
     }
     
     public void printMapa(int x, int y) {

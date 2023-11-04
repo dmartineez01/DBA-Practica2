@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package practica2;
 
 import java.awt.Graphics;
@@ -11,8 +7,12 @@ public class MapaPanel extends javax.swing.JPanel {
 
     private Mapa mapa;
     private int agenteX, agenteY;
-    private final int CELL_SIZE = 20; // Mantener la misma constante de tamaño de celda
-
+    private final int CELL_SIZE = 20; // Tamaño de cada celda
+    
+    public MapaPanel() {
+        initComponents();
+    }
+    
     public MapaPanel(Mapa mapa, int agenteX, int agenteY) {
         this.mapa = mapa;
         this.agenteX = agenteX;
@@ -23,21 +23,22 @@ public class MapaPanel extends javax.swing.JPanel {
     public void setAgentePosicion(int x, int y) {
         this.agenteX = x;
         this.agenteY = y;
-        repaint(); // Repintar el mapa cada vez que el agente cambia de posición
-    }
-    
-    public void setMap(Mapa nuevoMapa) {
-        this.mapa = nuevoMapa;
-        repaint(); // Repintar el panel para mostrar el nuevo mapa
+        repaint(); // Repinta el mapa cada vez que el agente cambia de posición
     }
 
-    
+    public void setMap(Mapa nuevoMapa) {
+        this.mapa = nuevoMapa;
+        repaint(); // Repinta el panel para mostrar el nuevo mapa
+    }
+
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    // Asegúrate de que el mapa no sea nulo antes de intentar pintarlo
+    if (mapa != null) {
         for (int i = 0; i < mapa.getFilas(); i++) {
             for (int j = 0; j < mapa.getColumnas(); j++) {
-                if (i == agenteX && j == agenteY) {
+                if (i == agenteX && j == agenteY) { // Asumiendo que agenteX es fila y agenteY es columna
                     g.setColor(Color.BLUE);
                 } else if (mapa.isObstacle(i, j)) {
                     g.setColor(Color.BLACK);
@@ -52,6 +53,7 @@ public class MapaPanel extends javax.swing.JPanel {
             }
         }
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,15 +64,17 @@ public class MapaPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        setBackground(new java.awt.Color(255, 255, 255));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 880, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 397, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -10,6 +10,8 @@ package practica2;
  */
 import java.awt.Point;
 import java.io.*;
+import java.awt.*;
+
 
 public class Mapa {
     private int[][] data;
@@ -83,39 +85,21 @@ public class Mapa {
         return posicionObjetivo;
     }
     
-    public void printMapa(int x, int y) {
-    // Imprimir el borde superior
-    System.out.print("+");
-    for (int j = 0; j < columnas; j++) {
-        System.out.print("-");
-    }
-    System.out.println("+");
-
-    for (int i = 0; i < filas; i++) {
-        System.out.print("|"); // Borde izquierdo
-        for (int j = 0; j < columnas; j++) {
-            if (i == x && j == y) {
-                System.out.print("A");
-            } else if (data[i][j] == -1) {
-                System.out.print("x");
-            } else if (i == 99 && j == 99) { // Coordenadas del objetivo (Ajustar según sea necesario)
-                System.out.print("G");
-            } else {
-                System.out.print("o");
+    public void dibujar(Graphics g) {
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                if (data[i][j] == -1) {
+                    g.setColor(Color.BLACK); // Color para los obstáculos
+                } else if (data[i][j] == 2) {
+                    g.setColor(Color.RED); // Color para el objetivo
+                } else {
+                    g.setColor(Color.WHITE); // Color para los caminos libres
+                }
+                g.fillRect(j * 20, i * 20, 20, 20); // Dibujar cada celda del mapa (asumiendo que cada celda es de 20x20 píxeles)
+                g.setColor(Color.GRAY); // Color para las líneas de la cuadrícula
+                g.drawRect(j * 20, i * 20, 20, 20); // Dibujar el borde de cada celda
             }
         }
-        System.out.print("|"); // Borde derecho
-        System.out.println();
     }
-
-    // Imprimir el borde inferior
-    System.out.print("+");
-    for (int j = 0; j < columnas; j++) {
-        System.out.print("-");
-    }
-    System.out.println("+");
-}
-
-
 }
 

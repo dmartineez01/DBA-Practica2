@@ -25,16 +25,25 @@ public class Controlador {
         interfaz.setVisible(true);
         
     } 
-
+    
+    
     public void cargarMapa(String rutaArchivo) {
         
         mapa = new Mapa(rutaArchivo);
     }
 
     public void colocarObjetivo(int x, int y) {
-        mapa.setObjetivo(x, y);
-        // Ya no es necesario llamar a un método específico para actualizar la posición del objetivo en la interfaz.
-        actualizarInterfaz();
+        
+        if ((mapa.isFree(x, y) || mapa.isObjetivo(x, y)) && x >= 0 && x < mapa.getColumnas() && y >= 0 && y < mapa.getFilas()) {
+            objetivo = new Point(x,y);
+            mapa.setObjetivo(x, y);
+            // Ya no es necesario llamar a un método específico para actualizar la posición del objetivo en la interfaz.
+            actualizarInterfaz();
+        }
+        else {
+            System.out.print("No se puede colocar al objetivo en esas coordenadas");
+        }
+        
     }
 
     public void colocarAgente(int x, int y) {
@@ -42,9 +51,14 @@ public class Controlador {
         Point objetivo = mapa.getObjetivo();
         System.out.print("CONTROLADOR COLOCA OBJETIVO EN: ");
         System.out.print(objetivo);
-        agente = new Agente(entorno, x, y, objetivo);
-        // Ya no es necesario llamar a un método específico para actualizar la posición del agente en la interfaz.
-        actualizarInterfaz();
+        
+        if ((mapa.isFree(x, y) || mapa.isObjetivo(x, y)) && x >= 0 && x < mapa.getColumnas() && y >= 0 && y < mapa.getFilas()) {
+            agente = new Agente(entorno, x, y, objetivo);
+            // Ya no es necesario llamar a un método específico para actualizar la posición del agente en la interfaz.
+            actualizarInterfaz();
+        } else {
+            System.out.print("No se puede colocar al agente en esas coordenadas");
+        }
     }
 
     public void iterarAgente() {
@@ -73,15 +87,6 @@ public class Controlador {
     // Método auxiliar para actualizar la interfaz.
     private void actualizarInterfaz() {
         interfaz.actualizarInfo(); // Asume que este método actualizará el mapa y la información del agente y del objetivo.
-    }
-
-    
-    public void dibujarMapa(Graphics g) {
-        // Esta función dibujará el mapa y las posiciones del agente y del objetivo
-        // Debes implementar la lógica de dibujo basada en cómo se representa tu mapa
-        // Por ejemplo, podrías tener algo así:
-        mapa.dibujar(g);
-        agente.dibujar(g);
     }
 
     public static void main(String[] args) {

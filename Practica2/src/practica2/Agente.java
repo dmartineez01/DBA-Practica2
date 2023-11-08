@@ -38,14 +38,13 @@ public class Agente extends Agent {
         };
 
         for (int i = 0; i < directions.length; i++) {
-            int newX = posicion.x + directions[i][0];
-            int newY = posicion.y + directions[i][1];
+            int newX = posicion.x + directions[i][0]; // x para columna
+            int newY = posicion.y + directions[i][1]; // y para fila
 
-            if (!entorno.getPosicionesNoPosibles().containsKey(new Point(newX, newY))) {
+            if (entorno.isFree(newX, newY)) {
                 sucesores.add(new Point(newX, newY));
             }
         }
-
         return sucesores;
     }
 
@@ -92,8 +91,11 @@ public class Agente extends Agent {
 
     // Este método se llamará para mover el agente hacia el objetivo
     public void moveToObjetivo() {
+        
         entorno.verificarCasillasAdyacentes(posicionActual);
-        if(pasos.isEmpty() || entorno.getPosicionesNoPosibles().containsKey(pasos.get(0)) ){ //FALTA HACER QUE RECALCULE SI EL SIGUIENTE PASO ES ERRÓNEO
+        
+        
+        if(pasos.isEmpty() || !entorno.isFree(pasos.get(0).x, pasos.get(0).y)){
             pasos = obtenerCaminoHasta(objetivo);
         }
         
@@ -125,10 +127,5 @@ public class Agente extends Agent {
     public void checkEntorno() {
         boolean[] infoAdyacente = entorno.verificarCasillasAdyacentes(posicionActual);
         // Procesa la información del entorno según sea necesario
-    }
-
-    public void dibujar(Graphics g) {
-        g.setColor(Color.BLUE); // Color para el agente
-        g.fillOval(posicionActual.x * 20, posicionActual.y * 20, 20, 20); // Dibujar al agente como un círculo
     }
 }

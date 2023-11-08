@@ -50,17 +50,32 @@ public class Mapa {
         }
     }
 
+    // En Mapa.java
     public boolean isObstacle(int x, int y) {
-        return data[x][y] == -1;
+        return data[y][x] == -1; // x para columna, y para fila
     }
 
     public boolean isFree(int x, int y) {
-        return data[x][y] == 0;
+        return data[y][x] == 0; // x para columna, y para fila
     }
-    
+
     public boolean isObjetivo(int x, int y) {
-        return data[x][y] == 2;
+        return data[y][x] == 2; // x para columna, y para fila
     }
+
+
+    public void setObjetivo(int x, int y) throws IllegalArgumentException {
+        if (x < 0 || x >= columnas || y < 0 || y >= filas) {
+            throw new IllegalArgumentException("Las coordenadas están fuera del mapa.");
+        }
+        if (!isObstacle(x, y)) {
+            data[y][x] = 2; // y para fila, x para columna
+            posicionObjetivo = new Point(x, y);
+        } else {
+            System.err.println("No se puede establecer el objetivo en una posición ocupada por un obstáculo.");
+        }
+    }
+
 
     public int getFilas() {
         return filas;
@@ -69,38 +84,12 @@ public class Mapa {
     public int getColumnas() {
         return columnas;
     }
-    
-    // Modificamos el método setObjetivo
-    public void setObjetivo(int x, int y) {
-        System.out.print("MAPA COLOCA OBJETIVO EN "+x+" , "+ y );
-        if (!isObstacle(x, y)) {
-            data[x][y] = 2; // Suponiendo que el número 2 indica el objetivo en tu mapa
-            posicionObjetivo = new Point(x, y);
-        } else {
-            System.err.println("No se puede establecer el objetivo en una posición ocupada por un obstáculo.");
-        }
-    }
 
     // Implementamos getObjetivo
     public Point getObjetivo() {
         return posicionObjetivo;
     }
     
-    public void dibujar(Graphics g) {
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < columnas; j++) {
-                if (data[i][j] == -1) {
-                    g.setColor(Color.BLACK); // Color para los obstáculos
-                } else if (data[i][j] == 2) {
-                    g.setColor(Color.RED); // Color para el objetivo
-                } else {
-                    g.setColor(Color.WHITE); // Color para los caminos libres
-                }
-                g.fillRect(j * 20, i * 20, 20, 20); // Dibujar cada celda del mapa (asumiendo que cada celda es de 20x20 píxeles)
-                g.setColor(Color.GRAY); // Color para las líneas de la cuadrícula
-                g.drawRect(j * 20, i * 20, 20, 20); // Dibujar el borde de cada celda
-            }
-        }
-    }
+    
 }
 

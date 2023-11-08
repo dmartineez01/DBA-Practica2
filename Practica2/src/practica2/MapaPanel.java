@@ -2,6 +2,7 @@ package practica2;
 
 import java.awt.Graphics;
 import java.awt.Color;
+import javax.swing.JOptionPane;
 
 public class MapaPanel extends javax.swing.JPanel {
 
@@ -21,9 +22,21 @@ public class MapaPanel extends javax.swing.JPanel {
     }
 
     public void setAgentePosicion(int x, int y) {
-        this.agenteX = x;
-        this.agenteY = y;
-        repaint(); // Repinta el mapa cada vez que el agente cambia de posición
+        
+        if ((mapa.isFree(x, y) || mapa.isObjetivo(x, y)) && x >= 0 && x < mapa.getColumnas() && y >= 0 && y < mapa.getFilas()) {
+            
+            System.out.print("La casilla es la siguiente x: " + x + " y:" + y + " y segun el mapa estaria: " + mapa.isFree(x, y) + "\n" );
+            this.agenteX = x;
+            this.agenteY = y;
+            repaint(); // Repinta el mapa cada vez que el agente cambia de posición
+        } else {
+            
+            
+            JOptionPane.showMessageDialog(this, "No se puede colocar al Agente en esta posición!");
+        }
+
+        
+        
     }
 
     public void setMap(Mapa nuevoMapa) {
@@ -31,29 +44,35 @@ public class MapaPanel extends javax.swing.JPanel {
         repaint(); // Repinta el panel para mostrar el nuevo mapa
     }
 
-    @Override
+@Override
 protected void paintComponent(Graphics g) {
     super.paintComponent(g);
     // Asegúrate de que el mapa no sea nulo antes de intentar pintarlo
     if (mapa != null) {
-        for (int i = 0; i < mapa.getFilas(); i++) {
-            for (int j = 0; j < mapa.getColumnas(); j++) {
-                if (i == agenteX && j == agenteY) { // Asumiendo que agenteX es fila y agenteY es columna
+        for (int i = 0; i < mapa.getFilas(); i++) { // i representa las filas
+            for (int j = 0; j < mapa.getColumnas(); j++) { // j representa las columnas
+                // Asegúrate de que el agente y los obstáculos se pinten correctamente
+                if (j == agenteX && i == agenteY) { // agenteX es columna (j) y agenteY es fila (i)
                     g.setColor(Color.BLUE);
-                } else if (mapa.isObstacle(i, j)) {
+                } else if (mapa.isObstacle(j, i)) { // Cambia aquí para isObstacle(j, i)
                     g.setColor(Color.BLACK);
-                } else if (mapa.isObjetivo(i, j)) {
+                } else if (mapa.isObjetivo(j, i)) { // Cambia aquí para isObjetivo(j, i)
                     g.setColor(Color.RED);
                 } else {
                     g.setColor(Color.WHITE);
                 }
+                // Pinta la celda
                 g.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                // Dibuja el borde de la celda
                 g.setColor(Color.GRAY);
                 g.drawRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
             }
         }
     }
 }
+
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.

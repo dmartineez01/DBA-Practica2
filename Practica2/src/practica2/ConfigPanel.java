@@ -42,7 +42,17 @@ public class ConfigPanel extends javax.swing.JPanel {
             return null;
         }
     }
-
+    
+    public Point getPosicionObjetivo() {
+        try {
+            int x = Integer.parseInt(txtPosXObjetivo.getText());
+            int y = Integer.parseInt(txtPosYObjetivo.getText());
+            return new Point(x, y);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Las coordenadas deben ser números enteros.");
+            return null;
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -60,6 +70,9 @@ public class ConfigPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         txtPosXAgente = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtPosXObjetivo = new javax.swing.JTextField();
+        txtPosYObjetivo = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(204, 204, 255));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -75,12 +88,33 @@ public class ConfigPanel extends javax.swing.JPanel {
         txtPosYAgente.setText("Pos Y");
 
         cbMapas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "mapa1", "mapa2", "mapa3" }));
+        cbMapas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbMapasActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Selecciona un mapa:");
 
         txtPosXAgente.setText("Pos X");
+        txtPosXAgente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPosXAgenteActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Posicion Agente:");
+
+        jLabel4.setText("Posicion Objetivo:");
+
+        txtPosXObjetivo.setText("Pos X");
+        txtPosXObjetivo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPosXObjetivoActionPerformed(evt);
+            }
+        });
+
+        txtPosYObjetivo.setText("Pos Y");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -92,16 +126,19 @@ public class ConfigPanel extends javax.swing.JPanel {
                         .addGap(30, 30, 30)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(cbMapas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(62, 62, 62))
+                            .addComponent(cbMapas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(txtPosXAgente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtPosYAgente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(txtPosYAgente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtPosXObjetivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPosYObjetivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(106, 106, 106)
                         .addComponent(btnActualizar)))
@@ -114,12 +151,18 @@ public class ConfigPanel extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbMapas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPosYAgente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
                     .addComponent(txtPosXAgente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                    .addComponent(txtPosYAgente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtPosXObjetivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtPosYObjetivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnActualizar)
                 .addGap(20, 20, 20))
         );
@@ -145,9 +188,21 @@ public class ConfigPanel extends javax.swing.JPanel {
                 .addComponent(jLabel3)
                 .addGap(29, 29, 29)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cbMapasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbMapasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbMapasActionPerformed
+
+    private void txtPosXAgenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPosXAgenteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPosXAgenteActionPerformed
+
+    private void txtPosXObjetivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPosXObjetivoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPosXObjetivoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -156,8 +211,11 @@ public class ConfigPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField txtPosXAgente;
+    private javax.swing.JTextField txtPosXObjetivo;
     private javax.swing.JTextField txtPosYAgente;
+    private javax.swing.JTextField txtPosYObjetivo;
     // End of variables declaration//GEN-END:variables
 }

@@ -43,12 +43,30 @@ public class Interfaz extends javax.swing.JFrame {
     configPanel = new ConfigPanel(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            
+            String mapaSeleccionado = configPanel.getMapaSeleccionado();
+            mapaSeleccionado = "practica2/Mapas/" + mapaSeleccionado + ".txt";
+            controlador.cargarMapa(mapaSeleccionado); 
+            
+            
+            Point nuevaPosicionObjetivo = configPanel.getPosicionObjetivo();
+            if (nuevaPosicionObjetivo != null) {
+                
+                controlador.colocarObjetivo(nuevaPosicionObjetivo.x, nuevaPosicionObjetivo.y);
+                actualizarInfo();
+            }
+            
             Point nuevaPosicion = configPanel.getPosicionAgente();
             if (nuevaPosicion != null) {
+                
                 controlador.colocarAgente(nuevaPosicion.x, nuevaPosicion.y);
                 actualizarInfo();
             }
-            String mapaSeleccionado = configPanel.getMapaSeleccionado();
+            
+            panelMapa.setMap(controlador.getMapaActual());
+            panelMapa.setAgentePosicion(controlador.getPosicionAgente().x, controlador.getPosicionAgente().y);
+            resetInfo();
+            
             // Actualizar el mapa actual en el controlador y en la interfaz
         }
     });
@@ -128,6 +146,16 @@ public class Interfaz extends javax.swing.JFrame {
         panelMapa.repaint(); // Podrías necesitar repintar el mapa después de establecer la nueva posición
     }
     
+    public void resetInfo() {
+        Point posicionAgente = controlador.getPosicionAgente();
+        Point posicionObjetivo = controlador.getPosicionObjetivo();
+
+        infoPanel.setIteracion(0);
+        infoPanel.setPosicionAgente(posicionAgente);
+        infoPanel.setPosicionObjetivo(posicionObjetivo);
+
+        panelMapa.repaint(); // Podrías necesitar repintar el mapa después de establecer la nueva posición
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

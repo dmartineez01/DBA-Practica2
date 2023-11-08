@@ -30,8 +30,15 @@ public class Controlador {
     public void cargarMapa(String rutaArchivo) {
         
         mapa = new Mapa(rutaArchivo);
+        
     }
-
+    
+    public void actualizarMapa(String rutaArchivo){
+        
+        mapa = new Mapa(rutaArchivo);
+        entorno.setMapa(mapa);
+    }
+    
     public void colocarObjetivo(int x, int y) {
         
         if ((mapa.isFree(x, y) || mapa.isObjetivo(x, y)) && x >= 0 && x < mapa.getColumnas() && y >= 0 && y < mapa.getFilas()) {

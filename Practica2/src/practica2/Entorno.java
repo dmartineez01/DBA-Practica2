@@ -48,7 +48,19 @@ public class Entorno {
     public boolean isFree(int x, int y) {
         return x >= 0 && x < mapa.getColumnas() && y >= 0 && y < mapa.getFilas() && mapa.isFree(x, y);
     }
-
+    
+    public void setMapa(Mapa mapaNuevo){
+        this.mapa = mapaNuevo;
+        // Restablecer posicionesNoPosibles para el nuevo mapa
+        this.posicionesNoPosibles = new TreeMap<>((p1, p2) -> {
+            int compareY = Integer.compare(p1.y, p2.y);
+            if (compareY != 0) {
+                return compareY;
+            }
+            return Integer.compare(p1.x, p2.x);
+        });
+    }
+    
     public NavigableMap<Point, Boolean> getPosicionesNoPosibles() {
         return posicionesNoPosibles;
     }

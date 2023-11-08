@@ -46,7 +46,7 @@ public class Interfaz extends javax.swing.JFrame {
             
             String mapaSeleccionado = configPanel.getMapaSeleccionado();
             mapaSeleccionado = "practica2/Mapas/" + mapaSeleccionado + ".txt";
-            controlador.cargarMapa(mapaSeleccionado); 
+            controlador.actualizarMapa(mapaSeleccionado); 
             
             
             Point nuevaPosicionObjetivo = configPanel.getPosicionObjetivo();

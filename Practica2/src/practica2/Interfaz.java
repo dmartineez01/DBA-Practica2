@@ -106,7 +106,7 @@ public class Interfaz extends javax.swing.JFrame {
     add(panelMapa); // Añadir el MapaPanel en la segunda fila
 
     // Configuramos el timer para la iteración automática
-    autoIterarTimer = new Timer(1000, new ActionListener() {
+    autoIterarTimer = new Timer(200, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             iterar();

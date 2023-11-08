@@ -153,10 +153,15 @@
         <Component class="javax.swing.JComboBox" name="cbMapas">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="3">
+              <StringArray count="8">
                 <StringItem index="0" value="mapa1"/>
                 <StringItem index="1" value="mapa2"/>
                 <StringItem index="2" value="mapa3"/>
+                <StringItem index="3" value="mapa4"/>
+                <StringItem index="4" value="mapa5"/>
+                <StringItem index="5" value="mapa6"/>
+                <StringItem index="6" value="mapa7"/>
+                <StringItem index="7" value="mapa8"/>
               </StringArray>
             </Property>
           </Properties>

@@ -56,7 +56,8 @@ public class Mapa {
     }
 
     public boolean isFree(int x, int y) {
-        return data[y][x] == 0; // x para columna, y para fila
+        
+        return data[y][x] != -1; // x para columna, y para fila
     }
 
     public boolean isObjetivo(int x, int y) {

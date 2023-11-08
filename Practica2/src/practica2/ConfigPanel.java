@@ -87,7 +87,7 @@ public class ConfigPanel extends javax.swing.JPanel {
 
         txtPosYAgente.setText("Pos Y");
 
-        cbMapas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "mapa1", "mapa2", "mapa3" }));
+        cbMapas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "mapa1", "mapa2", "mapa3", "mapa4", "mapa5", "mapa6", "mapa7", "mapa8" }));
         cbMapas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbMapasActionPerformed(evt);

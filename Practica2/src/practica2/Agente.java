@@ -41,7 +41,7 @@ public class Agente extends Agent {
             int newX = posicion.x + directions[i][0]; // x para columna
             int newY = posicion.y + directions[i][1]; // y para fila
 
-            if (entorno.isFree(newX, newY)) {
+            if (entorno.isFree(newX, newY) ) {
                 sucesores.add(new Point(newX, newY));
             }
         }

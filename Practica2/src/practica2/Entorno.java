@@ -46,7 +46,17 @@ public class Entorno {
     }
 
     public boolean isFree(int x, int y) {
-        return x >= 0 && x < mapa.getColumnas() && y >= 0 && y < mapa.getFilas() && mapa.isFree(x, y);
+        
+        Point punto = new Point(x, y);
+        if (posicionesNoPosibles.containsKey(punto)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public boolean isObjetivo(int x, int y) {
+        return mapa.isObjetivo(x, y);
     }
     
     public void setMapa(Mapa mapaNuevo){

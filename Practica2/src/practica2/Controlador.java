@@ -40,6 +40,8 @@ public class Controlador {
     public void colocarAgente(int x, int y) {
         // Asumiendo que el objetivo ya está establecido en el mapa
         Point objetivo = mapa.getObjetivo();
+        System.out.print("CONTROLADOR COLOCA OBJETIVO EN: ");
+        System.out.print(objetivo);
         agente = new Agente(entorno, x, y, objetivo);
         // Ya no es necesario llamar a un método específico para actualizar la posición del agente en la interfaz.
         actualizarInterfaz();

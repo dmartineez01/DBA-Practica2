@@ -72,6 +72,7 @@ public class Mapa {
     
     // Modificamos el método setObjetivo
     public void setObjetivo(int x, int y) {
+        System.out.print("MAPA COLOCA OBJETIVO EN "+x+" , "+ y );
         if (!isObstacle(x, y)) {
             data[x][y] = 2; // Suponiendo que el número 2 indica el objetivo en tu mapa
             posicionObjetivo = new Point(x, y);

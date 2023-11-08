@@ -7,7 +7,7 @@ public class Main {
         // Puedes agregar comandos aquí para cargar el mapa, colocar al agente y al objetivo, etc.
         // Ejemplo:
         controlador.cargarMapa("practica2/Mapas/mapa1.txt"); // Asumiendo que tienes un método cargarMapa implementado
-        controlador.colocarObjetivo(5, 5); // Asume que (5, 5) es una posición válida para el objetivo
+        controlador.colocarObjetivo(18, 18); // Asume que (5, 5) es una posición válida para el objetivo
         controlador.colocarAgente(0, 0); // Asume que (0, 0) es una posición válida para el agente
         
         // Iniciar un bucle de juego o iteraciones si es necesario

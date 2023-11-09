@@ -63,6 +63,8 @@ public class Interfaz extends javax.swing.JFrame {
                 actualizarInfo();
             }
             
+            controlador.resetEntorno();
+            
             panelMapa.setMap(controlador.getMapaActual());
             panelMapa.setAgentePosicion(controlador.getPosicionAgente().x, controlador.getPosicionAgente().y);
             resetInfo();

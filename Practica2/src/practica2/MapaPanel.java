@@ -25,7 +25,7 @@ public class MapaPanel extends javax.swing.JPanel {
         
         if ((mapa.isFree(x, y) || mapa.isObjetivo(x, y)) && x >= 0 && x < mapa.getColumnas() && y >= 0 && y < mapa.getFilas()) {
             
-            System.out.print("La casilla es la siguiente x: " + x + " y:" + y + " y segun el mapa estaria: " + mapa.isFree(x, y) + "\n" );
+            //  System.out.print("La casilla es la siguiente x: " + x + " y:" + y + " y segun el mapa estaria: " + mapa.isFree(x, y) + "\n" );
             this.agenteX = x;
             this.agenteY = y;
             repaint(); // Repinta el mapa cada vez que el agente cambia de posición

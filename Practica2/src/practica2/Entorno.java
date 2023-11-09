@@ -5,7 +5,6 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 
 public class Entorno {
-
     private Mapa mapa;
     private NavigableMap<Point, Boolean> posicionesNoPosibles = new TreeMap<>((p1, p2) -> {
         int compareY = Integer.compare(p1.y, p2.y); // Primero comparamos las filas
@@ -38,10 +37,7 @@ public class Entorno {
                 posicionesNoPosibles.put(new Point(newX, newY), Boolean.FALSE);
             }
         }
-        
-        System.out.print("Posicion (4,8): " + mapa.isFree(4, 8));
-        System.out.print("Posicion (8,4): " + mapa.isFree(8, 4));
-
+  
         return infoAdyacente;
     }
 

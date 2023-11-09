@@ -13,7 +13,8 @@ public class Agente extends Agent {
     private Point posicionActual;
     private Point objetivo;
     private Entorno entorno;
-    private ArrayList<Point> pasos = new ArrayList<>();;
+    private ArrayList<Point> pasos = new ArrayList<>();
+    private Controlador controlador;
 
     // Constructor
     public Agente(Entorno entorno, int startX, int startY, Point objetivo) {
@@ -22,6 +23,54 @@ public class Agente extends Agent {
         this.objetivo = objetivo; // Suponemos que la posición del objetivo es conocida por el agente
         System.out.print("Mi objetivo es: ");
         System.out.print(objetivo);
+    }
+
+    public Agente() {
+        // El constructor vacío es necesario para JADE
+    }
+
+    public Mapa cargarMapa(String rutaArchivo) {
+
+        return new Mapa(rutaArchivo);
+
+    }
+
+    public void setup() {
+
+        // Este método se llama después de que el agente haya sido creado
+        setEnabledO2ACommunication(true, 0);
+        Object[] args = getArguments();
+
+//            this.entorno = (Entorno) args[0];
+//            int startX = (Integer) args[1];
+//            int startY = (Integer) args[2];
+//            this.objetivo = (Point) args[3];
+//            this.posicionActual = new Point(startX, startY);
+//            this.pasos = new ArrayList<>();
+//            Mapa mapa = cargarMapa("practica2/Mapas/mapa1.txt");
+//            this.entorno = new Entorno(mapa);
+        int startX = 0;
+        int startY = 0;
+        this.objetivo = new Point(18, 18);
+        this.posicionActual = new Point(startX, startY);
+        this.pasos = new ArrayList<>();
+        this.controlador = new Controlador(this);
+        //iniciarMovimiento();
+
+        //System.out.print(entorno);
+//        addBehaviour(new CyclicBehaviour(this) {
+//            public void action() {
+//                Object msg = getAgent().getO2AObject();
+//                if (msg != null && msg.equals("move")) {
+//                    System.out.print("moveToObjetivo\n");
+//                    moveToObjetivo();
+//                }
+//            }
+//        });
+    }
+
+    public Agente getAgente() {
+        return this;
     }
 
     private double distanciaHeuristica(Point a, Point b) {
@@ -41,7 +90,7 @@ public class Agente extends Agent {
             int newX = posicion.x + directions[i][0]; // x para columna
             int newY = posicion.y + directions[i][1]; // y para fila
 
-            if (entorno.isFree(newX, newY) ) {
+            if (entorno.isFree(newX, newY)) {
                 sucesores.add(new Point(newX, newY));
             }
         }
@@ -89,16 +138,25 @@ public class Agente extends Agent {
         return null;
     }
 
+    public void setEntorno(Entorno e) {
+        this.entorno = e;
+    }
+
+    public void setObjetivo(Point o) {
+        this.objetivo = o;
+        this.pasos = new ArrayList<>();
+
+    }
+
     // Este método se llamará para mover el agente hacia el objetivo
     public void moveToObjetivo() {
-        
+
         entorno.verificarCasillasAdyacentes(posicionActual);
-        
-        
-        if(pasos.isEmpty() || !entorno.isFree(pasos.get(0).x, pasos.get(0).y)){
+
+        if (pasos.isEmpty() || !entorno.isFree(pasos.get(0).x, pasos.get(0).y)) {
             pasos = obtenerCaminoHasta(objetivo);
         }
-        
+
         posicionActual = pasos.get(0);
         pasos.remove(0);
 //        // Moverse horizontalmente hacia el objetivo si es posible
@@ -119,8 +177,24 @@ public class Agente extends Agent {
         return posicionActual;
     }
 
+    public void setPosicionActual(Point p) {
+        posicionActual = p;
+    }
+
     public Point getPosicionObjetivo() {
         return objetivo;
+    }
+
+    public Entorno getEntorno() {
+        return entorno;
+    }
+
+    public ArrayList<Point> getPasos() {
+        return pasos;
+    }
+
+    public void setPasos(ArrayList<Point> p) {
+        pasos = p;
     }
 
     // Llama a este método para obtener información del entorno

@@ -3,14 +3,27 @@ package practica2;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class ControlPanel extends JPanel {
 
     private ActionListener iterarListener;
     private ActionListener automaticoListener;
     
+    private ArrayList<Controlador> observadores = new ArrayList<Controlador>();
+    
     public ControlPanel(){
         initComponents();
+    }
+    
+    public void suscribir(Controlador c){
+        observadores.add(c);
+    }
+    
+    public void notificarAll(){
+        for(int i=0; i < observadores.size(); i++){
+            observadores.get(i).notificar();
+        }
     }
     
     public ControlPanel(ActionListener iterarListener, ActionListener automaticoListener) {

@@ -2,7 +2,6 @@ package practica2;
 
 import jade.core.Agent;
 import java.awt.Point;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +13,6 @@ public class Agente extends Agent {
     private Point objetivo;
     private Entorno entorno;
     private ArrayList<Point> pasos = new ArrayList<>();
-    private Controlador controlador;
-
-    // Constructor
-    public Agente(Entorno entorno, int startX, int startY, Point objetivo) {
-        this.entorno = entorno;
-        this.posicionActual = new Point(startX, startY);
-        this.objetivo = objetivo; // Suponemos que la posición del objetivo es conocida por el agente
-        System.out.print("Mi objetivo es: ");
-        System.out.print(objetivo);
-    }
 
     public Agente() {
         // El constructor vacío es necesario para JADE
@@ -36,37 +25,12 @@ public class Agente extends Agent {
     }
 
     public void setup() {
-
-        // Este método se llama después de que el agente haya sido creado
-        setEnabledO2ACommunication(true, 0);
-        Object[] args = getArguments();
-
-//            this.entorno = (Entorno) args[0];
-//            int startX = (Integer) args[1];
-//            int startY = (Integer) args[2];
-//            this.objetivo = (Point) args[3];
-//            this.posicionActual = new Point(startX, startY);
-//            this.pasos = new ArrayList<>();
-//            Mapa mapa = cargarMapa("practica2/Mapas/mapa1.txt");
-//            this.entorno = new Entorno(mapa);
         int startX = 0;
         int startY = 0;
         this.objetivo = new Point(18, 18);
         this.posicionActual = new Point(startX, startY);
-        this.pasos = new ArrayList<>();
-        this.controlador = new Controlador(this);
-        //iniciarMovimiento();
-
-        //System.out.print(entorno);
-//        addBehaviour(new CyclicBehaviour(this) {
-//            public void action() {
-//                Object msg = getAgent().getO2AObject();
-//                if (msg != null && msg.equals("move")) {
-//                    System.out.print("moveToObjetivo\n");
-//                    moveToObjetivo();
-//                }
-//            }
-//        });
+        this.pasos = new ArrayList<>();        
+        new Controlador(this);
     }
 
     public Agente getAgente() {
@@ -101,8 +65,6 @@ public class Agente extends Agent {
         boolean pasoPorRendija = false;
         Point ob = new Point(newX, newY);
         
-        //System.out.print("Estoy en la posicion: " + posicionActual + " y el siguiente paso que evaluo es: x= " + newX + " y = " + newY);
-
         Point direccion = new Point(ob.x - pos.x, ob.y - pos.y);
         Point obst1 = new Point(pos.x + direccion.x, pos.y);
         Point obst2 = new Point(pos.x, pos.y + direccion.y);
@@ -161,31 +123,6 @@ public class Agente extends Agent {
 
     }
 
-    // Este método se llamará para mover el agente hacia el objetivo
-    public void moveToObjetivo() {
-
-        entorno.verificarCasillasAdyacentes(posicionActual);
-
-        if (pasos.isEmpty() || !entorno.isFree(pasos.get(0).x, pasos.get(0).y)) {
-            pasos = obtenerCaminoHasta(objetivo);
-        }
-
-        posicionActual = pasos.get(0);
-        pasos.remove(0);
-//        // Moverse horizontalmente hacia el objetivo si es posible
-//        if (posicionActual.x < objetivo.x && entorno.isFree(posicionActual.x + 1, posicionActual.y)) {
-//            posicionActual.x++;
-//        } else if (posicionActual.x > objetivo.x && entorno.isFree(posicionActual.x - 1, posicionActual.y)) {
-//            posicionActual.x--;
-//        }
-//        // Moverse verticalmente hacia el objetivo si es posible
-//        if (posicionActual.y < objetivo.y && entorno.isFree(posicionActual.x, posicionActual.y + 1)) {
-//            posicionActual.y++;
-//        } else if (posicionActual.y > objetivo.y && entorno.isFree(posicionActual.x, posicionActual.y - 1)) {
-//            posicionActual.y--;
-//        }
-    }
-
     public Point getPosicionActual() {
         return posicionActual;
     }
@@ -210,9 +147,4 @@ public class Agente extends Agent {
         pasos = p;
     }
 
-    // Llama a este método para obtener información del entorno
-    public void checkEntorno() {
-        boolean[] infoAdyacente = entorno.verificarCasillasAdyacentes(posicionActual);
-        // Procesa la información del entorno según sea necesario
-    }
 }

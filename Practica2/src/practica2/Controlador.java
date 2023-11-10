@@ -57,6 +57,7 @@ public class Controlador {
         interfaz = new Interfaz(this);
         interfaz.actualizarInfo();
         interfaz.setVisible(true);
+        interfaz.getControlPanel().suscribir(this);
     }
 
     public void cargarMapa(String rutaArchivo) {
@@ -105,7 +106,7 @@ public class Controlador {
         agente.setEntorno(entorno);
     }
 
-    public void iterarAgente() {
+    public void notificar() {
         // Mover el agente
         //agente.moveToObjetivo();
         agente.addBehaviour(new MoveToObjetivoBehaviour(agente));

@@ -90,11 +90,24 @@ public class Agente extends Agent {
             int newX = posicion.x + directions[i][0]; // x para columna
             int newY = posicion.y + directions[i][1]; // y para fila
 
-            if (entorno.isFree(newX, newY)) {
+            if (entorno.isFree(newX, newY) && !pasoPorRendija(posicion, newX, newY)) {
                 sucesores.add(new Point(newX, newY));
             }
         }
         return sucesores;
+    }
+
+    public boolean pasoPorRendija(Point pos, int newX, int newY) {
+        boolean pasoPorRendija = false;
+        Point ob = new Point(newX, newY);
+        
+        //System.out.print("Estoy en la posicion: " + posicionActual + " y el siguiente paso que evaluo es: x= " + newX + " y = " + newY);
+
+        Point direccion = new Point(ob.x - pos.x, ob.y - pos.y);
+        Point obst1 = new Point(pos.x + direccion.x, pos.y);
+        Point obst2 = new Point(pos.x, pos.y + direccion.y);
+
+        return (entorno.getPosicionesNoPosibles().containsKey(obst1) && entorno.getPosicionesNoPosibles().containsKey(obst2));
     }
 
     public ArrayList<Point> obtenerCaminoHasta(Point objetivo) {

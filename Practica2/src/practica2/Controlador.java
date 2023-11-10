@@ -53,24 +53,6 @@ public class Controlador {
 
     }
 
-    private void iniciarJADE() {
-        Runtime runtime = Runtime.instance();
-        Profile profile = new ProfileImpl();
-        container = runtime.createMainContainer(profile);
-    }
-
-    private void crearYConfigurarAgente(int startX, int startY, Point objetivo) {
-        // Lógica para crear y configurar el agente
-        try {
-            Object[] agentArgs = new Object[]{entorno, startX, startY, objetivo};
-            agenteController = container.createNewAgent("agente", Agente.class.getName(), agentArgs);
-            agenteController.start();
-            
-        } catch (StaleProxyException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void inicializarInterfaz() {
         interfaz = new Interfaz(this);
         interfaz.actualizarInfo();

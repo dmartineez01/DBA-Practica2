@@ -11,6 +11,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.FloatControl;
+
+
 /**
  *
  * @author Usuario
@@ -19,25 +25,28 @@ public class Interfaz extends javax.swing.JFrame {
 
     private ConfigPanel configPanel;
     private InfoPanel infoPanel;
-    private MapaPanel panelMapa;
     private ControlPanel controlPanel;
+    private MapaPanel panelMapa;
+    private JPanel background;
 
     private Controlador controlador; // Supongamos que tienes una clase Controlador
     private Timer autoIterarTimer; // Timer para el modo automático
     private int iteracion = 0;
-
+    
+    private Clip clipBackground;
+    
     public Interfaz(Controlador controlador) {
         initComponents();
-        this.controlador = controlador; // Inyectamos la dependencia del controlador
+        this.controlador = controlador;
 
         setTitle("Simulación de Agente");
-        setSize(1400, 800);
+        setSize(1750, 750);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(2, 1)); // Establecer GridLayout para dos filas y una columna
-
-        // Crear un panel para la primera fila con GridLayout para tres paneles
-        JPanel fila1 = new JPanel(new GridLayout(1, 3));
-
+        setLayout(new GridLayout(1, 2)); // Un GridLayout de 1 fila y 2 columnas
+        
+        // Panel para agrupar configPanel, infoPanel y controlPanel
+        JPanel leftPanel = new JPanel(new GridLayout(3, 1));
+        
         // ConfigPanel
         configPanel = new ConfigPanel(new ActionListener() {
             @Override
@@ -70,11 +79,11 @@ public class Interfaz extends javax.swing.JFrame {
                 // Actualizar el mapa actual en el controlador y en la interfaz
             }
         });
-        fila1.add(configPanel);
+        leftPanel.add(configPanel);
 
         // InfoPanel
         infoPanel = new InfoPanel();
-        fila1.add(infoPanel);
+        leftPanel.add(infoPanel);
 
         // ControlPanel
         controlPanel = new ControlPanel(new ActionListener() {
@@ -94,24 +103,25 @@ public class Interfaz extends javax.swing.JFrame {
                 }
             }
         });
-        fila1.add(controlPanel);
-
-        // Agregar fila1 al JFrame
-        add(fila1);
-
+        leftPanel.add(controlPanel);
+        add(leftPanel); // Añadir el panel izquierdo
+        
         // MapaPanel
         Mapa mapaInicial = controlador.getMapaActual();
         Point posicionInicialAgente = controlador.getPosicionAgente();
         panelMapa = new MapaPanel(mapaInicial, posicionInicialAgente.x, posicionInicialAgente.y);
-        add(panelMapa); // Añadir el MapaPanel en la segunda fila
+        panelMapa.setBounds(10, 320, 750, 500); // Establecer posición y tamaño
+        add(panelMapa);
 
         // Configuramos el timer para la iteración automática
-        autoIterarTimer = new Timer(200, new ActionListener() {
+        autoIterarTimer = new Timer(500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 iterar();
             }
         });
+        
+        playBackgroundMusic("/sounds/background.wav");
     }
 
     public ControlPanel getControlPanel() {
@@ -121,6 +131,8 @@ public class Interfaz extends javax.swing.JFrame {
     public void actualizarMapaYAgente() {
         panelMapa.repaint(); // Si MapaPanel maneja su propio dibujo, un repaint será suficiente para actualizar la vista
     }
+
+
 
     public void iterar() {
         // Incrementar la iteración
@@ -133,9 +145,33 @@ public class Interfaz extends javax.swing.JFrame {
         actualizarMapaYAgente();
         if (controlador.agenteAlcanzoObjetivo()) {
             autoIterarTimer.stop();
-            JOptionPane.showMessageDialog(this, "El agente ha alcanzado el objetivo!");
+            if (clipBackground != null && clipBackground.isRunning()) {
+            clipBackground.stop(); // Detener la música de fondo
+        }
+        playSound("/sounds/victory.wav", true);
+            // Escalar la imagen para el diálogo
+            
+            ImageIcon icono = new ImageIcon(getClass().getResource("/images/link_zelda.gif"));
+
+            // Crear un JLabel para el mensaje con un tamaño de letra grande
+            JLabel messageLabel = new JLabel("<html><h1>¡Has conseguido salvar a la princesa!</h1></html>");
+            messageLabel.setHorizontalAlignment(JLabel.CENTER);
+
+            // Crear un panel para contener tanto el mensaje como la imagen
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.add(messageLabel, BorderLayout.NORTH); // Añadir el mensaje en la parte superior
+            panel.add(new JLabel(icono), BorderLayout.CENTER); // Añadir la imagen en el centro
+
+            // Mostrar el diálogo
+            JOptionPane.showMessageDialog(
+                this,
+                panel,
+                "Objetivo Alcanzado",
+                JOptionPane.INFORMATION_MESSAGE
+            );
         }
     }
+
 
     // Dentro de tu clase Interfaz...
     public void actualizarInfo() {
@@ -160,7 +196,64 @@ public class Interfaz extends javax.swing.JFrame {
 
         panelMapa.repaint(); // Podrías necesitar repintar el mapa después de establecer la nueva posición
     }
+    
+    private void playBackgroundMusic(String filePath) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(filePath));
+            clipBackground = AudioSystem.getClip();
+            clipBackground.open(audioInputStream);
+            // Ajustar el volumen
+            FloatControl gainControl = (FloatControl) clipBackground.getControl(FloatControl.Type.MASTER_GAIN);
+            float range = gainControl.getMaximum() - gainControl.getMinimum();
+            float gain = (range * 0.6f) + gainControl.getMinimum(); // 0.2f = 20% del volumen máximo
+            gainControl.setValue(gain);
 
+            clipBackground.start();
+            clipBackground.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al reproducir la música de fondo.");
+        }
+    }
+
+
+    private void playSound(String filePath, boolean resumeBackgroundMusic) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResource(filePath));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+
+            // Ajustar el volumen del sonido de la victoria
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            float range = gainControl.getMaximum() - gainControl.getMinimum();
+            float gain = (range * 0.7f) + gainControl.getMinimum(); // 0.2f = 20% del volumen máximo
+            gainControl.setValue(gain);
+
+            clip.start();
+
+            // Esperar 5 segundos, detener el sonido de la victoria y reanudar la música de fondo
+            if (resumeBackgroundMusic) {
+                Timer timer = new Timer(3000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        clip.stop();
+                        clip.close();
+                        if (clipBackground != null) {
+                            clipBackground.start();
+                            clipBackground.loop(Clip.LOOP_CONTINUOUSLY);
+                        }
+                    }
+                });
+                timer.setRepeats(false);
+                timer.start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al reproducir el sonido del objetivo.");
+        }
+    }
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
